@@ -1,3 +1,8 @@
+import sys
+sys.path.append('../queue_and_stack')
+from dll_queue import Queue
+# from doubly_linked_list import DoublyLinkedList
+
 class LRUCache:
     """
     Our LRUCache class keeps track of the max number of nodes it
@@ -7,7 +12,10 @@ class LRUCache:
     to every node stored in the cache.
     """
     def __init__(self, limit=10):
-        pass
+        self.limit = limit
+        self.current = 0
+        self.cache = Queue()
+        self.storage = {}
 
     """
     Retrieves the value associated with the given key. Also
@@ -17,7 +25,11 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        pass
+        result = self.storage[key] if key in self.storage else None
+        if not result: return
+        else:
+            self.cache.storage.move_to_end(result)
+            return result.value
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -30,4 +42,17 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        pass
+        result = self.storage[key] if key in self.storage else None
+        if result:
+            self.cache.storage.move_to_end(result)
+            result.value = value
+            return
+        elif self.current >= self.limit:
+            r = self.cache.dequeue()
+            for k, v in self.storage.items():
+                if r == v.value: self.storage[k] = None
+            print(r)
+            self.current -= 1
+        self.cache.enqueue(value)
+        self.storage[key] = self.cache.storage.tail
+        self.current += 1
