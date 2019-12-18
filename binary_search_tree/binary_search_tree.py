@@ -5,19 +5,50 @@ from dll_stack import Stack
 
 
 class BinarySearchTree:
-    def __init__(self, value):
+    def __init__(self, value=None):
         self.value = value
         self.left = None
         self.right = None
 
     # Insert the given value into the tree
     def insert(self, value):
-        pass
+        current = None
+        parent = self
+        if parent.value is None:
+            parent.value = value
+            return
+        node = BinarySearchTree(value)
+        while True:
+            if value < parent.value:
+                current = parent.left
+                if not current:
+                    parent.left = node
+                    return
+            # elif value == parent.value: return
+            else:
+                current = parent.right
+                if not current:
+                    parent.right = node
+                    return
+            parent = current
+
 
     # Return True if the tree contains the value
     # False if it does not
     def contains(self, target):
-        pass
+        current = None
+        parent = self
+        if parent.value is None: return False
+        while True:
+            if target < parent.value:
+                current = parent.left
+                if not current: return False
+            elif target == parent.value: return True
+            else:
+                current = parent.right
+                if not current: return False
+            parent = current
+
 
     # Return the maximum value found in the tree
     def get_max(self):
